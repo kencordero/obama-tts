@@ -1,6 +1,31 @@
 # Cordero 8.12 Text-to-Speech v0.2
+
+#updating 13.04 v 0.3.0
 import sys
 
+class TextToSpeechEngine:
+	def tts:
+		pass
+
+	def create_sound_file(csd_data_file):
+		#run csound
+		import csnd
+		cs = csnd.Csound()
+		res = cs.Compile(csd_data_file)
+		cs.Perform()
+	
+	def play_sound_file:
+		import pyxine
+		xine = pyxine.Xine()
+		stream = xine.stream_new()
+		stream.open("obama.wav")
+		stream.play()
+		input("Press enter to exit...")
+		
+	def create_data_file():
+		#TODO
+		pass
+	
 text = []
 for arg in sys.argv:
   if arg != "tts.py" and arg[0] != '>':
@@ -31,16 +56,5 @@ for word in text:
 dstFile.write("</CsScore>\n\n</CsoundSynthesizer>")
 dstFile.close()
 
-#run csound
-import csnd
-cs = csnd.Csound()
-res = cs.Compile("tts.csd")
-cs.Perform()
 
-#play file
-import pyxine
-xine = pyxine.Xine()
-stream = xine.stream_new()
-stream.open("obama.wav")
-stream.play()
-raw_input("Press enter to exit...")
+
