@@ -6,8 +6,42 @@ import csnd
 import pyxine
 from random import sample, shuffle
 
+class CsdFile(object):
+    def __init__(self):
+        pass
+    def create(self, file_name):
+        self.file = open(file_name, "w")
+        self.file.write('<CsoundSynthesizer>\n\n')
+        add_options()
+        add_instruments()
+        add_score()
+        self.file.write('</CsoundSynthesizer>')
+        self.file.close()
+    def add_options(self):
+        self.file.write('<CsOptions>\n')
+        self.file.write('  -o speech.wav\n')
+        self.file.write('</CsOptions>\n\n')
+        pass
+    def add_instruments(self):
+        self.instrument_count = 0
+        self.file.write('<CsInstruments>\n')
+        add_instrument('My Mother Preferred A Gentler Portrait.wav')
+        add_instrument('I Pulled Into The Airport Parking Lot.wav')
+        add_instrument('Auma Drove.wav')
+        add_instrument('speech on racism.wav')
+        self.file.write('</CsInstruments>\n\n')
+    def add_score(self):
+        self.file.write('<CsScore>\n')
+        self.file.write(';in  time     len      off\n')
+        current_time = 0.0
+        #TODO choose method
+        self.file.write('</CsScore>\n\n')
+    def add_instrument(self, file_name):
+        self.instrument_count += 1
+        self.file.write('instr {0}\n  iskptim = p4\n  a1, a2 soundin "{1}", iskptim\n  a1 = a1 + a2\n  out a1\nendin\n\n'.format(self.instrument_count, file_name))
+
 class TextToSpeechEngine:
-    def tts:
+    def tts():
         text = []
         for arg in sys.argv:
             if arg != "tts.py" and arg[0] != '>':
@@ -21,18 +55,7 @@ class TextToSpeechEngine:
         tts = dict()
         for word in all_data:
             tts[word[0]] = [word[1], word[2], word[3]]
-        #create and write csd file
-        dstFile = open("tts.csd", "w")
-        dstFile.write("<CsoundSynthesizer>\n\n<CsOptions>\n  -o speech.wav\n</CsOptions>\n\n<CsInstruments>\ninstr 1\n  iskptim = p4\n")
-        dstFile.write("  a1, a2 soundin \"My Mother Preferred A Gentler Portrait.wav\", iskptim\n  a1 = a1 + a2\n  out a1\nendin\n\ninstr 2\n")
-        dstFile.write("  iskptim = p4\n  a1, a2 soundin \"I Pulled Into The Airport Parking Lot.wav\", iskptim\n  a1 = a1 + a2\n  out a1\nendin")
-        dstFile.write("\n\ninstr 3\n  iskptim = p4\n  a1, a2 soundin \"Auma Drove.wav\", iskptim\n  a1 = a1 + a2\n  out a1\nendin\n")
-        dstFile.write("\ninstr 4\n  iskptim = p4\n  a1 soundin \"speech on racism.wav\", iskptim\n  out a1\nendin\n</CsInstruments>\n")
-        dstFile.write("\n<CsScore>\n;in  time     len      off\n")
-        currentTime = 0.0        
-        #TODO choose between standard, antakshari_shuffle, and sample
-        dstFile.write("</CsScore>\n\n</CsoundSynthesizer>")
-        dstFile.close()        
+        #TODO create and write csd file                        
 
     def create_sound_file(csd_data_file):
         #run csound        
@@ -40,7 +63,7 @@ class TextToSpeechEngine:
         res = cs.Compile(csd_data_file)
         cs.Perform()
     
-    def play_sound_file:        
+    def play_sound_file():        
         xine = pyxine.Xine()
         stream = xine.stream_new()
         stream.open("obama.wav")
@@ -51,16 +74,14 @@ class TextToSpeechEngine:
         #TODO
         pass
     
-    def standard:
+    def standard():
         for word in text:
             if tts.has_key(word):
                 vals = tts[word]
                 dstFile.write("i%d %f %f %f\n" % (int(vals[0]), currentTime, float(vals[2]), float(vals[1])))
-                currentTime += float(vals[2])
-            
-
+                currentTime += float(vals[2])           
     
-    def antakshari_shuffle:
+    def antakshari_shuffle():
         count = 0
         s = tts.keys()
         shuffle(s)
@@ -72,7 +93,7 @@ class TextToSpeechEngine:
                 last_letter = word[len(word)-1]
                 count += 1   
 
-    def sample:
+    def sample():
         s = sample(tts.keys(), 100)
         for i in s:
             vals = tts[i]
